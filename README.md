@@ -20,7 +20,7 @@ How to Run
 ----
 
 ```
-python3 sel.py -s http://myserver:5555
+python3 sel.py -u http://myserver:5555
 ```
 
 Result
